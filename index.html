@@ -58,14 +58,26 @@ footer{text-align:center;opacity:.8;margin-top:30px}
 </div>
 
 <script>
-const tag = "%23QGPQC9G2";
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImViYjkxYzcxLTdjYmYtNDUwOC1iM2VmLTgwOTIwNjEzNGUxZSIsImlhdCI6MTc2NTA5OTUxOCwic3ViIjoiZGV2ZWxvcGVyLzhhZmUxNzM3LWQ3YjItOWJlMS0wMWE2LWI2YTZmNzVmNjkwZiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3OS4xMjcuMTg1LjUzIl0sInR5cGUiOiJjbGllbnQifV19.Zb6LFjFW6mIwJpQD9-h8LDrMHfCCMKwL97Z2E8-WEKMystqEpTMa5IsC4ZIJLKPvO-ti5Kn354QGEXbgwkHS0w";
+const tag = "QGPQC9G2";
+const proxy = "https://api.allorigins.win/get?url="; // Free public proxy for Royale API
 
 async function go(){
   try{
-    const clan = await fetch(`https://proxy.cors.sh/https://api.clashroyale.com/v1/clans/${tag}`,{headers:{authorization:`Bearer ${token}`}}).then(r=>r.json());
-    const mem = await fetch(`https://proxy.cors.sh/https://api.clashroyale.com/v1/clans/${tag}/members`,{headers:{authorization:`Bearer ${token}`}}).then(r=>r.json());
-    const river = await fetch(`https://proxy.cors.sh/https://api.clashroyale.com/v1/clans/${tag}/riverrace`,{headers:{authorization:`Bearer ${token}`}}).then(r=>r.json());
+    const clanUrl = `${proxy}${encodeURIComponent('https://api.clashroyale.com/v1/clans/%23' + tag)}`;
+    const memUrl = `${proxy}${encodeURIComponent('https://api.clashroyale.com/v1/clans/%23' + tag + '/members')}`;
+    const riverUrl = `${proxy}${encodeURIComponent('https://api.clashroyale.com/v1/clans/%23' + tag + '/riverrace')}`;
+
+    const clanRes = await fetch(clanUrl);
+    const clanData = await clanRes.json();
+    const clan = JSON.parse(clanData.contents);
+
+    const memRes = await fetch(memUrl);
+    const memData = await memRes.json();
+    const mem = JSON.parse(memData.contents);
+
+    const riverRes = await fetch(riverUrl);
+    const riverData = await riverRes.json();
+    const river = JSON.parse(riverData.contents);
 
     document.getElementById("badge").src=clan.badgeUrls.medium;
     document.getElementById("trophies").textContent=clan.clanScore.toLocaleString();
@@ -78,12 +90,12 @@ async function go(){
     });
 
     const r=document.getElementById("race"); r.innerHTML="";
-    (river.clan?.participants||[]).sort((a,b)=>b.fame-b.fame).slice(0,10).forEach((p,i)=>{
+    (river.clan?.participants||[]).sort((a,b)=>b.fame-a.fame).slice(0,10).forEach((p,i)=>{
       r.innerHTML+=`<tr><td>${i+1}</td><td>${p.name}</td><td>${p.fame.toLocaleString()}</td></tr>`;
     });
 
     document.getElementById("time").textContent=new Date().toLocaleTimeString();
-  }catch(e){console.error(e);}
+  }catch(e){console.error(e); document.getElementById("trophies").textContent="Error - Check console (F12)";}
 }
 go(); setInterval(go,120000);
 </script>
