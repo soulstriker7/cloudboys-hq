@@ -86,64 +86,63 @@
   </div>
 
   <script>
-    const CLAN_TAG = "QGPQC9G2"; // No # needed for API
-    const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhkZDZmNGM5LWNmNmYtNGI0OC05ZGIyLTY3ZGU2OWU3MmU0NiIsImlhdCI6MTc2NTExMDMwOCwic3ViIjoiZGV2ZWxvcGVyLzhhZmUxNzM3LWQ3YjItOWJlMS0wMWE2LWI2YTZmNzVmNjkwZiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI0NS43OS4yMTguNzkiXSwidHlwZSI6ImNsaWVudCJ9XX0.RKDcMJzhjcbHUqkhqg7HifaKljYXFuXTkHTtbVco-oYdF1mVZPbqGo5A6gurdzoaFCFz4h4LxhXJ2PzKuUcqLw";
-    const PROXY_BASE = "https://proxy.royaleapi.dev/v1"; // Free proxy for your token
+    const CLAN_TAG = "QGPQC9G2"; // No # needed
+    const API_BASE = `https://api.royaleapi.com/v1/clans/${CLAN_TAG}`; // Public RoyaleAPI endpoint - no token needed!
 
     async function loadData() {
       try {
-        const headers = { "Authorization": `Bearer ${TOKEN}` };
-        const encodedTag = `%23${CLAN_TAG}`;
-        const clan = await (await fetch(`${PROXY_BASE}/clans/${encodedTag}`, { headers })).json();
-        const membersRes = await fetch(`${PROXY_BASE}/clans/${encodedTag}/members`, { headers });
+        const clanRes = await fetch(`${API_BASE}`);
+        const clan = await clanRes.json();
+        const membersRes = await fetch(`${API_BASE}/members`);
         const membersData = await membersRes.json();
-        const members = membersData.items || [];
-        const riverRace = await (await fetch(`${PROXY_BASE}/clans/${encodedTag}/riverrace`, { headers })).json();
+        const members = membersData || [];
+        const riverRes = await fetch(`${API_BASE}/riverrace`);
+        const riverRace = await riverRes.json();
 
         // Header
-        document.getElementById("clanBadge").src = clan.badgeUrls.medium;
-        document.getElementById("clanTag").textContent = `#${CLAN_TAG}`;
+        document.getElementById("clanBadge").src = clan.badge.medium;
+        document.getElementById("clanTag").textContent = clan.tag;
         document.getElementById("clanLocation").textContent = `${clan.location.name} (${clan.location.countryCode})`;
 
         // Cards
-        document.getElementById("clanPoints").textContent = clan.clanScore.toLocaleString();
+        document.getElementById("clanPoints").textContent = clan.score.toLocaleString();
         document.getElementById("riverRacePoints").textContent = (riverRace.status || 0).toLocaleString();
-        document.getElementById("membersCount").textContent = clan.members;
+        document.getElementById("membersCount").textContent = clan.memberCount;
         const weeklyDon = members.reduce((sum, m) => sum + m.donations, 0);
         document.getElementById("weeklyDonations").textContent = weeklyDon.toLocaleString();
 
         // Quick stats
-        members.sort((a, b) => b.trophies - a.trophies);
+        members.sort((a, b) => b.arena.id - a.arena.id); // Sort by trophies approx
         document.getElementById("topFame").textContent = `${members[0]?.name || '—'} • ${members[0]?.trophies || 0}`;
         members.sort((a, b) => b.donations - a.donations);
         document.getElementById("topDonations").textContent = `${members[0]?.name || '—'} • ${members[0]?.donations || 0}`;
-        document.getElementById("kingdomLevel").textContent = clan.clanLevel;
+        document.getElementById("kingdomLevel").textContent = clan.level;
         document.getElementById("coCount").textContent = members.filter(m => m.role === "coLeader").length;
-        document.getElementById("elderCount").textContent = members.filter(m => m.role === "admin").length;
+        document.getElementById("elderCount").textContent = members.filter(m => m.role === "elder").length;
         document.getElementById("currentWarStatus").textContent = riverRace.status === "ended" ? "Race Ended" : "Active";
 
         // Members table
         const tbody = document.querySelector("#memberTable tbody");
         tbody.innerHTML = "";
         if (members.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="loading">No members loaded</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="loading">No members</td></tr>';
           return;
         }
         members.slice(0, 10).forEach((m, i) => {
           const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${i + 1}</td><td><strong>${m.name}</strong><br><small>${m.tag}</small></td><td>${m.trophies.toLocaleString()}</td><td>${m.donations}</td><td>${m.role === "leader" ? "Leader" : m.role === "coLeader" ? "Co-Leader" : m.role === "admin" ? "Elder" : "Member"}</td>`;
+          tr.innerHTML = `<td>${i + 1}</td><td><strong>${m.name}</strong><br><small>${m.tag}</small></td><td>${m.trophies.toLocaleString()}</td><td>${m.donations}</td><td>${m.role === "leader" ? "Leader" : m.role === "coLeader" ? "Co-Leader" : m.role === "elder" ? "Elder" : "Member"}</td>`;
           tbody.appendChild(tr);
         });
 
         // River Race table
         const raceBody = document.querySelector("#raceTable tbody");
         raceBody.innerHTML = "";
-        if (riverRace.avatars && riverRace.avatars.length > 0) {
+        if (riverRace.participants && riverRace.participants.length > 0) {
           document.getElementById("noRaceMsg").classList.add("hidden");
-          document.getElementById("raceTitle").textContent = "River Race Boats";
-          riverRace.avatars.slice(0, 4).forEach((boat, i) => {
+          document.getElementById("raceTitle").textContent = "River Race Participants";
+          riverRace.participants.slice(0, 4).forEach((p, i) => {
             const tr = document.createElement("tr");
-            tr.innerHTML = `<td>${i + 1}</td><td>${boat.name}</td><td>${(boat.fame || 0).toLocaleString()}</td><td>${boat.progress || 0}%</td>`;
+            tr.innerHTML = `<td>${i + 1}</td><td>${p.name}</td><td>${p.fame.toLocaleString()}</td><td>${p.progress || 0}%</td>`;
             raceBody.appendChild(tr);
           });
         } else {
