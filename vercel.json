@@ -1,5 +1,13 @@
 {
-  "build": {
-    "outputDirectory": "deploy/_site"
+  "functions": {
+    "deploy/_site/index.html": {
+      "runtime": "static"
+    },
+    "deploy/_site/*.html": {
+      "runtime": "static"
+    },
+    "deploy/_site/**/*": {
+      "runtime": "static"
+    }
   }
 }
