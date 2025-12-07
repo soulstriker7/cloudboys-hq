@@ -1,103 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cloud Boys HQ</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Outfit',sans-serif;background:linear-gradient(135deg,#6b48ff,#9d7eff);color:#fff;min-height:100vh;padding:20px}
-.c{max-width:1200px;margin:0 auto}
-header{background:rgba(255,255,255,.15);backdrop-filter:blur(12px);padding:20px;border-radius:20px;display:flex;align-items:center;gap:20px;margin-bottom:25px}
-header img{width:80px;border-radius:50%}
-header h1{font-size:2.4rem;font-weight:700}
-.type{background:rgba(255,255,255,.2);padding:8px 16px;border-radius:30px;font-weight:600}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:25px 0}
-.card{padding:20px;border-radius:16px;text-align:center}
-.blue{background:#5b9eff}.purple{background:#9f74ff}.brown{background:#b98b6e}.teal{background:#5cc9b4}
-.card strong{font-size:2rem;display:block;margin-top:8px}
-.panel{background:rgba(255,255,255,.15);backdrop-filter:blur(12px);padding:20px;border-radius:20px;margin-bottom:20px}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{padding:12px;text-align:left}
-th{background:rgba(255,255,255,.1)}
-tr:nth-child(even){background:rgba(255,255,255,.05)}
-footer{text-align:center;opacity:.8;margin-top:30px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Boys HQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #6b48ff, #9d7eff); color: white; min-height: 100vh; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 20px; border-radius: 20px; display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
+    header img { width: 80px; border-radius: 50%; }
+    header h1 { font-size: 2.2rem; font-weight: 700; }
+    .type-badge { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 30px; font-weight: 600; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .card { padding: 20px; border-radius: 16px; text-align: center; font-weight: 600; }
+    .card.blue { background: #5b9eff; } .card.purple { background: #9f74ff; } .card.brown { background: #b98b6e; } .card.teal { background: #5cc9b4; }
+    .card strong { font-size: 2rem; display: block; margin-top: 8px; }
+    .quick-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 30px; }
+    .stat-card { background: rgba(255,255,255,0.15); padding: 16px; border-radius: 14px; text-align: center; font-weight: 500; }
+    .stat-card.teal { background: #5cc9b4; } .stat-card.purple { background: #9f74ff; } .stat-card.brown { background: #b98b6e; } .stat-card.blue { background: #5b9eff; } .stat-card.lightblue { background: #74b9ff; }
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+    .panel { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; overflow: hidden; }
+    .panel h2 { margin-bottom: 15px; font-size: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; }
+    th { background: rgba(255,255,255,0.1); }
+    tr:nth-child(even) { background: rgba(255,255,255,0.05); }
+    .hidden { display: none; }
+    footer { text-align: center; opacity: 0.8; font-size: 0.9rem; margin-top: 20px; }
+    .loading { text-align: center; color: #ccc; }
+  </style>
 </head>
 <body>
-<div class="c">
-  <header>
-    <img id="badge" src="" alt="Badge">
-    <div>
-      <h1>Cloud Boys HQ</h1>
-      <p id="tag">#QGPQC9G2</p>
-      <p>India</p>
+  <div class="container">
+    <header>
+      <img id="clanBadge" src="" alt="Badge">
+      <div>
+        <h1>Cloud Boys HQ</h1>
+        <p id="clanTag">Loading...</p>
+        <p id="clanLocation"></p>
+      </div>
+      <div class="type-badge">Open</div>
+    </header>
+
+    <div class="cards-grid">
+      <div class="card blue"><span>Clan Trophies</span><strong id="clanPoints">Loading...</strong></div>
+      <div class="card purple"><span>River Race Points</span><strong id="riverRacePoints">Loading...</strong></div>
+      <div class="card brown"><span>Donations / Week</span><strong id="weeklyDonations">Loading...</strong></div>
+      <div class="card teal"><span>Members</span><strong id="membersCount">Loading...</strong>/50</div>
     </div>
-    <div class="type">Open</div>
-  </header>
 
-  <div class="grid">
-    <div class="card blue"><span>Clan Trophies</span><strong id="trophies">…</strong></div>
-    <div class="card purple"><span>River Race Points</span><strong id="racePts">…</strong></div>
-    <div class="card brown"><span>Donations/Week</span><strong id="dons">…</strong></div>
-    <div class="card teal"><span>Members</span><strong id="mems">…</strong>/50</div>
+    <div class="quick-stats">
+      <div class="stat-card"><span>Top Fame This Week</span><strong id="topFame">Loading...</strong></div>
+      <div class="stat-card teal"><span>Top Donations</span><strong id="topDonations">Loading...</strong></div>
+      <div class="stat-card purple"><span>Kingdom Level</span><strong id="kingdomLevel">Loading...</strong></div>
+      <div class="stat-card brown"><span>Current War</span><strong id="currentWarStatus">Loading...</strong></div>
+      <div class="stat-card blue"><span>Co-leaders</span><strong id="coCount">Loading...</strong></div>
+      <div class="stat-card lightblue"><span>Elders</span><strong id="elderCount">Loading...</strong></div>
+    </div>
+
+    <div class="main-grid">
+      <div class="panel">
+        <h2>Clan Members (Top 10 by Trophies)</h2>
+        <table id="memberTable">
+          <thead><tr><th>Rank</th><th>Player</th><th>Trophies</th><th>Donations</th><th>Role</th></tr></thead>
+          <tbody><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h2 id="raceTitle">River Race Boats</h2>
+        <table id="raceTable">
+          <thead><tr><th>Boat</th><th>Player</th><th>Fame</th><th>Progress</th></tr></thead>
+          <tbody><tr><td colspan="4" class="loading">Loading...</td></tr></tbody>
+        </table>
+        <p id="noRaceMsg" class="hidden">No active race/war</p>
+      </div>
+    </div>
+
+    <footer>
+      <small>Last updated: <span id="lastUpdate">Loading...</span> • Auto-refreshes every 2 min</small>
+    </footer>
   </div>
 
-  <div class="panel">
-    <h2>Top 10 Members</h2>
-    <table><thead><tr><th>#</th><th>Name</th><th>Trophies</th><th>Donations</th><th>Role</th></tr></thead><tbody id="members"></tbody></table>
-  </div>
+  <script>
+    const CLAN_TAG = "QGPQC9G2"; // No # needed for API
+    const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhkZDZmNGM5LWNmNmYtNGI0OC05ZGIyLTY3ZGU2OWU3MmU0NiIsImlhdCI6MTc2NTExMDMwOCwic3ViIjoiZGV2ZWxvcGVyLzhhZmUxNzM3LWQ3YjItOWJlMS0wMWE2LWI2YTZmNzVmNjkwZiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI0NS43OS4yMTguNzkiXSwidHlwZSI6ImNsaWVudCJ9XX0.RKDcMJzhjcbHUqkhqg7HifaKljYXFuXTkHTtbVco-oYdF1mVZPbqGo5A6gurdzoaFCFz4h4LxhXJ2PzKuUcqLw";
+    const PROXY_BASE = "https://proxy.royaleapi.dev/v1"; // Free proxy for your token
 
-  <div class="panel">
-    <h2>River Race Fame Leaderboard</h2>
-    <table><thead><tr><th>#</th><th>Player</th><th>Fame</th></tr></thead><tbody id="race"></tbody></table>
-  </div>
+    async function loadData() {
+      try {
+        const headers = { "Authorization": `Bearer ${TOKEN}` };
+        const encodedTag = `%23${CLAN_TAG}`;
+        const clan = await (await fetch(`${PROXY_BASE}/clans/${encodedTag}`, { headers })).json();
+        const membersRes = await fetch(`${PROXY_BASE}/clans/${encodedTag}/members`, { headers });
+        const membersData = await membersRes.json();
+        const members = membersData.items || [];
+        const riverRace = await (await fetch(`${PROXY_BASE}/clans/${encodedTag}/riverrace`, { headers })).json();
 
-  <footer>Last update: <span id="time"></span> • Updates every 2 min</footer>
-</div>
+        // Header
+        document.getElementById("clanBadge").src = clan.badgeUrls.medium;
+        document.getElementById("clanTag").textContent = `#${CLAN_TAG}`;
+        document.getElementById("clanLocation").textContent = `${clan.location.name} (${clan.location.countryCode})`;
 
-<script>
-const tag = "QGPQC9G2";
-const proxy = "https://api.allorigins.win/get?url="; // Free public proxy for Royale API
+        // Cards
+        document.getElementById("clanPoints").textContent = clan.clanScore.toLocaleString();
+        document.getElementById("riverRacePoints").textContent = (riverRace.status || 0).toLocaleString();
+        document.getElementById("membersCount").textContent = clan.members;
+        const weeklyDon = members.reduce((sum, m) => sum + m.donations, 0);
+        document.getElementById("weeklyDonations").textContent = weeklyDon.toLocaleString();
 
-async function go(){
-  try{
-    const clanUrl = `${proxy}${encodeURIComponent('https://api.clashroyale.com/v1/clans/%23' + tag)}`;
-    const memUrl = `${proxy}${encodeURIComponent('https://api.clashroyale.com/v1/clans/%23' + tag + '/members')}`;
-    const riverUrl = `${proxy}${encodeURIComponent('https://api.clashroyale.com/v1/clans/%23' + tag + '/riverrace')}`;
+        // Quick stats
+        members.sort((a, b) => b.trophies - a.trophies);
+        document.getElementById("topFame").textContent = `${members[0]?.name || '—'} • ${members[0]?.trophies || 0}`;
+        members.sort((a, b) => b.donations - a.donations);
+        document.getElementById("topDonations").textContent = `${members[0]?.name || '—'} • ${members[0]?.donations || 0}`;
+        document.getElementById("kingdomLevel").textContent = clan.clanLevel;
+        document.getElementById("coCount").textContent = members.filter(m => m.role === "coLeader").length;
+        document.getElementById("elderCount").textContent = members.filter(m => m.role === "admin").length;
+        document.getElementById("currentWarStatus").textContent = riverRace.status === "ended" ? "Race Ended" : "Active";
 
-    const clanRes = await fetch(clanUrl);
-    const clanData = await clanRes.json();
-    const clan = JSON.parse(clanData.contents);
+        // Members table
+        const tbody = document.querySelector("#memberTable tbody");
+        tbody.innerHTML = "";
+        if (members.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="loading">No members loaded</td></tr>';
+          return;
+        }
+        members.slice(0, 10).forEach((m, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${i + 1}</td><td><strong>${m.name}</strong><br><small>${m.tag}</small></td><td>${m.trophies.toLocaleString()}</td><td>${m.donations}</td><td>${m.role === "leader" ? "Leader" : m.role === "coLeader" ? "Co-Leader" : m.role === "admin" ? "Elder" : "Member"}</td>`;
+          tbody.appendChild(tr);
+        });
 
-    const memRes = await fetch(memUrl);
-    const memData = await memRes.json();
-    const mem = JSON.parse(memData.contents);
+        // River Race table
+        const raceBody = document.querySelector("#raceTable tbody");
+        raceBody.innerHTML = "";
+        if (riverRace.avatars && riverRace.avatars.length > 0) {
+          document.getElementById("noRaceMsg").classList.add("hidden");
+          document.getElementById("raceTitle").textContent = "River Race Boats";
+          riverRace.avatars.slice(0, 4).forEach((boat, i) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${i + 1}</td><td>${boat.name}</td><td>${(boat.fame || 0).toLocaleString()}</td><td>${boat.progress || 0}%</td>`;
+            raceBody.appendChild(tr);
+          });
+        } else {
+          document.getElementById("noRaceMsg").classList.remove("hidden");
+          raceBody.innerHTML = '<tr><td colspan="4" class="loading">No race data</td></tr>';
+        }
 
-    const riverRes = await fetch(riverUrl);
-    const riverData = await riverRes.json();
-    const river = JSON.parse(riverData.contents);
+        document.getElementById("lastUpdate").textContent = new Date().toLocaleTimeString();
+      } catch (error) {
+        console.error("API Error:", error);
+        document.querySelectorAll("[id$='Points'], [id$='Donations'], [id$='Count']").forEach(el => el.textContent = "Error");
+        document.querySelector("#memberTable tbody").innerHTML = '<tr><td colspan="5">Error loading data (check console F12)</td></tr>';
+      }
+    }
 
-    document.getElementById("badge").src=clan.badgeUrls.medium;
-    document.getElementById("trophies").textContent=clan.clanScore.toLocaleString();
-    document.getElementById("mems").textContent=clan.members;
-    document.getElementById("dons").textContent=mem.items.reduce((a,b)=>a+b.donations,0).toLocaleString();
-
-    const m=document.getElementById("members"); m.innerHTML="";
-    mem.items.sort((a,b)=>b.trophies-a.trophies).slice(0,10).forEach((p,i)=>{
-      m.innerHTML+=`<tr><td>${i+1}</td><td>${p.name}</td><td>${p.trophies}</td><td>${p.donations}</td><td>${p.role[0].toUpperCase()+p.role.slice(1)}</td></tr>`;
-    });
-
-    const r=document.getElementById("race"); r.innerHTML="";
-    (river.clan?.participants||[]).sort((a,b)=>b.fame-a.fame).slice(0,10).forEach((p,i)=>{
-      r.innerHTML+=`<tr><td>${i+1}</td><td>${p.name}</td><td>${p.fame.toLocaleString()}</td></tr>`;
-    });
-
-    document.getElementById("time").textContent=new Date().toLocaleTimeString();
-  }catch(e){console.error(e); document.getElementById("trophies").textContent="Error - Check console (F12)";}
-}
-go(); setInterval(go,120000);
-</script>
+    loadData();
+    setInterval(loadData, 120000); // 2 mins
+  </script>
 </body>
 </html>
